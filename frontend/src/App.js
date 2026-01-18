@@ -9,9 +9,9 @@ import Home from './pages/Home';
 import HotelBooking from './pages/HotelBooking';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import BookingScanner from './pages/Scanner';
 import TrainBooking from './pages/TrainBooking';
 import TravelContacts from './pages/TravelContacts';
-import BookingScanner from './pages/Scanner';
 
 const authHiddenRoutes = ['/login', '/register'];
 
@@ -28,6 +28,9 @@ function RequireAuth({ children }) {
 }
 
 function RedirectIfAuth({ children }) {
+  if (hasToken()) {
+    return <Navigate to="/" replace />;
+  }
   return children;
 }
 
@@ -41,7 +44,16 @@ function AppContent() {
       <main className="flex w-full flex-col items-stretch justify-center">
         <div className="flex w-full flex-col justify-center">
           <Routes>
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route
+              path="/"
+              element={
+                hasToken() ? (
+                  <Home />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
             <Route
               path="/flights"
               element={(
